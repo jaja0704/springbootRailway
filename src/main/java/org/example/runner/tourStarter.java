@@ -26,7 +26,7 @@ public class tourStarter implements ApplicationRunner {
         sightRepository.deleteAll();
         
         if (args.containsOption("init-db")) {
-            System.out.println("偵測到 init-db 參數，正在初始化資料庫...");
+            System.out.println("偵測到 init-db 參數，正在初始化資料庫....");
         }
         
         KeelungSightsCrawler crawler = new KeelungSightsCrawler();
