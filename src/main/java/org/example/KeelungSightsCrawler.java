@@ -61,7 +61,11 @@ public class KeelungSightsCrawler {
         } catch (IOException e) {
             logger.error("【網路異常】連線到旅遊王失敗！", e);
             return null;
+        } catch (Exception e) {
+            logger.error("遭遇其他未知錯誤，但強制讓專案繼續啟動", e);
+            return null;
         }
+
         // throw new UnsupportedOperationException("Unimplemented method 'getItems'");
     }
 
