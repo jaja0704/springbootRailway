@@ -18,6 +18,7 @@ public class KeelungSightsCrawler {
 
     public Sight[] getItems(String string) {
 
+        Sight[] ResultSights = null;
 
         try {
             String htmlPage = Jsoup.connect("https://www.travelking.com.tw/tourguide/taiwan/keelungcity/")
@@ -50,22 +51,18 @@ public class KeelungSightsCrawler {
                     }
                 }
             }
-            Sight[] ResultSights = tempSights.toArray(new Sight[0]);
+            ResultSights = tempSights.toArray(new Sight[0]);
             System.out.println(ResultSights);
-            return ResultSights;
 
         } catch (HttpStatusException e) {
             // 使用 logger 物件記錄錯誤，這不會讓 Spring Boot 崩潰，但能讓你查日誌時一目了然
             logger.error("【爬蟲失敗】目標網站封鎖了我們的連線 (403 Forbidden)！", e);
-            return null;
         } catch (IOException e) {
             logger.error("【網路異常】連線到旅遊王失敗！", e);
-            return null;
         } catch (Exception e) {
             logger.error("遭遇其他未知錯誤，但強制讓專案繼續啟動", e);
-            return null;
         }
-
+        return ResultSights;
         // throw new UnsupportedOperationException("Unimplemented method 'getItems'");
     }
 
@@ -73,22 +70,26 @@ public class KeelungSightsCrawler {
         Sight tempSight = new Sight();
 
         try {
-            String subHtmlPage = Jsoup.connect(url).get().toString();
+            String subHtmlPage = Jsoup.connect(url)
+                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+                .referrer("https://www.google.com")
+                .timeout(5000)
+                .get().toString();
             Document subDoc = Jsoup.parse(subHtmlPage, url);
 
-            
+
             // String title = subDoc.title();
 
             Elements spanTags = subDoc.select("span strong");
             // System.out.println(spanTags.text());
             tempSight.setCategory(spanTags.text());
 
-        
+
             Elements metaTags = subDoc.select("div#point_area meta");
             for (Element meta : metaTags) {
                 String property = meta.attr("itemprop"); // 抓取 itemprop 屬性
                 String content = meta.attr("content");   // 抓取 content 屬性
-                
+
                 // System.out.println("屬性: " + property + " | 內容: " + content);
                 if("name".equals(property)){
                     tempSight.setSightName(content);
