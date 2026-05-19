@@ -3,47 +3,66 @@ package org.example;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class KeelungSightsCrawler {
 
+    private static final Logger logger = LoggerFactory.getLogger(KeelungSightsCrawler.class);
 
-    public Sight[] getItems(String string) throws IOException {
-        String htmlPage = Jsoup.connect("https://www.travelking.com.tw/tourguide/taiwan/keelungcity/").get().toString();
-        Document doc = Jsoup.parse(htmlPage, "https://www.travelking.com.tw/tourguide/taiwan/keelungcity/"); 
+    public Sight[] getItems(String string) {
 
-        String selector = String.format("h4:contains(%s)", string);
-        Element headElements = doc.selectFirst(selector);
-        ArrayList<Sight> tempSights = new ArrayList<Sight>();
-        
 
-        System.out.println("--- 開始抓取 [" + headElements.text() + "] 下方的內容 ---");
+        try {
+            String htmlPage = Jsoup.connect("https://www.travelking.com.tw/tourguide/taiwan/keelungcity/")
+                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+                .referrer("https://www.google.com")
+                .timeout(5000)
+                .get().toString();
+            Document doc = Jsoup.parse(htmlPage, "https://www.travelking.com.tw/tourguide/taiwan/keelungcity/");
 
-        
-        if (headElements != null) {
-            Element targElement = headElements.nextElementSibling();
+            String selector = String.format("h4:contains(%s)", string);
+            Element headElements = doc.selectFirst(selector);
+            ArrayList<Sight> tempSights = new ArrayList<Sight>();
 
-            if (targElement != null && targElement.tagName().equals("ul")) {
-                Elements links = targElement.select("li a"); 
-                
-                for (Element link : links) {
-                    String tempUrl = link.attr("abs:href");
-                    System.out.println("網址: " + tempUrl);
-                    Sight temp =SubPage(tempUrl);
-                    temp.setZone(string);
-                    tempSights.add(temp);
+
+            System.out.println("--- 開始抓取 [" + headElements.text() + "] 下方的內容 ---");
+
+
+            if (headElements != null) {
+                Element targElement = headElements.nextElementSibling();
+
+                if (targElement != null && targElement.tagName().equals("ul")) {
+                    Elements links = targElement.select("li a");
+
+                    for (Element link : links) {
+                        String tempUrl = link.attr("abs:href");
+                        System.out.println("網址: " + tempUrl);
+                        Sight temp =SubPage(tempUrl);
+                        temp.setZone(string);
+                        tempSights.add(temp);
+                    }
                 }
             }
-        }
-        Sight[] ResultSights = tempSights.toArray(new Sight[0]);
-        System.out.println(ResultSights);
+            Sight[] ResultSights = tempSights.toArray(new Sight[0]);
+            System.out.println(ResultSights);
+            return ResultSights;
 
+        } catch (HttpStatusException e) {
+            // 使用 logger 物件記錄錯誤，這不會讓 Spring Boot 崩潰，但能讓你查日誌時一目了然
+            logger.error("【爬蟲失敗】目標網站封鎖了我們的連線 (403 Forbidden)！", e);
+            return null;
+        } catch (IOException e) {
+            logger.error("【網路異常】連線到旅遊王失敗！", e);
+            return null;
+        }
         // throw new UnsupportedOperationException("Unimplemented method 'getItems'");
-    
-        return ResultSights;
     }
 
     public static Sight SubPage(String url) throws IOException{
