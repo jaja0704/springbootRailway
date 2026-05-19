@@ -66,7 +66,7 @@ public class KeelungSightsCrawler {
         // throw new UnsupportedOperationException("Unimplemented method 'getItems'");
     }
 
-    public static Sight SubPage(String url) throws IOException{
+    public static Sight SubPage(String url){
         Sight tempSight = new Sight();
 
         try {
@@ -76,8 +76,6 @@ public class KeelungSightsCrawler {
                 .timeout(5000)
                 .get().toString();
             Document subDoc = Jsoup.parse(subHtmlPage, url);
-
-
             // String title = subDoc.title();
 
             Elements spanTags = subDoc.select("span strong");
@@ -110,6 +108,9 @@ public class KeelungSightsCrawler {
 
         } catch (IOException e) {
             System.err.println("讀取內頁失敗: " + url + " 原因: " + e.getMessage());
+            logger.error("【網路異常】連線到旅遊分頁失敗！", e);
+        } catch (Exception e) {
+            logger.error("遭遇其他未知錯誤，但強制讓專案繼續啟動", e);
         }
 
         // System.out.println(tempSight);
