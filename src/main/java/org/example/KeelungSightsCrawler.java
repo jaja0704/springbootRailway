@@ -48,6 +48,7 @@ public class KeelungSightsCrawler {
                         Sight temp =SubPage(tempUrl);
                         temp.setZone(string);
                         tempSights.add(temp);
+                        Thread.sleep(3000);
                     }
                 }
             }
