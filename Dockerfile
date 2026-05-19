@@ -1,22 +1,21 @@
-# === 第一階段：編譯環境 ===
-FROM ubuntu:22.04 AS builder
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install -y openjdk-21-jdk maven && rm -rf /var/lib/apt-get/lists/*
+# -- build stage --
+FROM maven:3.9.12-eclipse-temurin-21 AS build
 
-WORKDIR /build
-COPY . .
-RUN mvn clean package -DskipTests
+COPY pom.xml /root
+COPY src /root/src
 
-# === 第二階段：運行環境（只保留執行需要的東西） ===
-# 使用 Eclipse Temurin 官方基於 Ubuntu (jammy) 的 Runtime 映像檔
-FROM eclipse-temurin:21-jre-jammy
+WORKDIR /root
+RUN mvn clean package -Dmaven.test.skip=true
 
+# -- package stage --
+FROM eclipse-temurin:21-jre-alpine
+
+# 解法 2：為了避免複製到 plain.jar 導致失敗，先建一個目錄存放，然後在執行時處理
+# 這裡用一個小技巧，先將 target 整個複製過來，確保執行檔存在
 WORKDIR /app
-# 從編譯階段把打包好的 jar 檔偷過來
-COPY --from=builder /build/target/*.jar app.jar
+# 避免複製到 -plain.jar，假設一般 jar 的命名通常不包含 plain
+COPY --from=build /root/target/*-SNAPSHOT.jar app.jar
 
-# 雲端平台動態 Port 設定
-ENV PORT 8080
-EXPOSE 8080
-
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# 解法 1：使用 ENTRYPOINT 並結合 shell 讀取 Railway 提供的環境變數 PORT
+# 若本地測試沒有 PORT 變數，預設就使用 8080
+ENTRYPOINT ["sh", "-c", "java -Dserver.port=${PORT:-8080} -jar app.jar"]
