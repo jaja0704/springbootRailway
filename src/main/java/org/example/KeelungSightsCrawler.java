@@ -24,7 +24,7 @@ public class KeelungSightsCrawler {
             String htmlPage = Jsoup.connect("https://www.travelking.com.tw/tourguide/taiwan/keelungcity/")
                 .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
                 .referrer("https://www.google.com")
-                .header("Cookie", "ASPSESSIONIDSSAASADQ=HBLMKILBOMBEHPHOLBACADCB; _ga=GA1.1.2137325978.1779165100; cf_clearance=VZBjARWpWQBcQ5C2Mpk5XCMUpQ.uQBzSpKyuA2HuL.Q-1779165119-1.2.1.1-lFFTYo9XhkOCX4ZP6Tp8ZrHUN430AkIMfhdEp3G9gcVAgQ0xnYC4oxxC0tBiR0HEzxmLGRn6MZHMg47y9vpWjU_c9TeXgiujB_5uv7yh4YxL349_npR8ZX49Sub65y5Otxx6F4IDQn1Z5yP1INk3QiMDGbTnDwNHlxYWkiVjv_De6Ewbh_FTtxIYmMWHE0aGVmwmZnKCZwCo3nWEJZ0MUbrHbif6tRDTHOPTwIFhxxH4jxx6dwB32rzgf69Ese_o1etw0VVpCMILBsdnGg19J3SFDUcSdmJYGi8y9.yxjbxzD1kWe_twF0vdPWn9mWXqTLFoIwVIoMcCBlpB2t7bKg; _ga_W53XQNGQRL=GS2.1.s1779165100$o1$g1$t1779165157$j3$l0$h0") // 💡 模擬你已經登入或通過驗證的狀態
+                .header("Cookie", "ASPSESSIONIDSSAASADQ=HBLMKILBOMBEHPHOLBACADCB; _ga=GA1.1.2137325978.1779165100; cf_clearance=VZBjARWpWQBcQ5C2Mpk5XCMUpQ.uQBzSpKyuA2HuL.Q-1779165119-1.2.1.1-lFFTYo9XhkOCX4ZP6Tp8ZrHUN430AkIMfhdEp3G9gcVAgQ0xnYC4oxxC0tBiR0HEzxmLGRn6MZHMg47y9vpWjU_c9TeXgiujB_5uv7yh4YxL349_npR8ZX49Sub65y5Otxx6F4IDQn1Z5yP1INk3QiMDGbTnDwNHlxYWkiVjv_De6Ewbh_FTtxIYmMWHE0aGVmwmZnKCZwCo3nWEJZ0MUbrHbif6tRDTHOPTwIFhxxH4jxx6dwB32rzgf69Ese_o1etw0VVpCMILBsdnGg19J3SFDUcSdmJYGi8y9.yxjbxzD1kWe_twF0vdPWn9mWXqTLFoIwVIoMcCBlpB2t7bKg; _ga_W53XQNGQRL=GS2.1.s1779165100$o1$g1$t1779166042$j60$l0$h0") // 💡 模擬你已經登入或通過驗證的狀態
                 .timeout(5000)
                 .get().toString();
             Document doc = Jsoup.parse(htmlPage, "https://www.travelking.com.tw/tourguide/taiwan/keelungcity/");
@@ -74,7 +74,7 @@ public class KeelungSightsCrawler {
             String subHtmlPage = Jsoup.connect(url)
                 .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
                 .referrer("https://www.google.com")
-                .header("Cookie", "ASPSESSIONIDSSAASADQ=HBLMKILBOMBEHPHOLBACADCB; _ga=GA1.1.2137325978.1779165100; cf_clearance=VZBjARWpWQBcQ5C2Mpk5XCMUpQ.uQBzSpKyuA2HuL.Q-1779165119-1.2.1.1-lFFTYo9XhkOCX4ZP6Tp8ZrHUN430AkIMfhdEp3G9gcVAgQ0xnYC4oxxC0tBiR0HEzxmLGRn6MZHMg47y9vpWjU_c9TeXgiujB_5uv7yh4YxL349_npR8ZX49Sub65y5Otxx6F4IDQn1Z5yP1INk3QiMDGbTnDwNHlxYWkiVjv_De6Ewbh_FTtxIYmMWHE0aGVmwmZnKCZwCo3nWEJZ0MUbrHbif6tRDTHOPTwIFhxxH4jxx6dwB32rzgf69Ese_o1etw0VVpCMILBsdnGg19J3SFDUcSdmJYGi8y9.yxjbxzD1kWe_twF0vdPWn9mWXqTLFoIwVIoMcCBlpB2t7bKg; _ga_W53XQNGQRL=GS2.1.s1779165100$o1$g1$t1779165157$j3$l0$h0") // 💡 模擬你已經登入或通過驗證的狀態
+                .header("Cookie", "ASPSESSIONIDSSAASADQ=HBLMKILBOMBEHPHOLBACADCB; _ga=GA1.1.2137325978.1779165100; cf_clearance=VZBjARWpWQBcQ5C2Mpk5XCMUpQ.uQBzSpKyuA2HuL.Q-1779165119-1.2.1.1-lFFTYo9XhkOCX4ZP6Tp8ZrHUN430AkIMfhdEp3G9gcVAgQ0xnYC4oxxC0tBiR0HEzxmLGRn6MZHMg47y9vpWjU_c9TeXgiujB_5uv7yh4YxL349_npR8ZX49Sub65y5Otxx6F4IDQn1Z5yP1INk3QiMDGbTnDwNHlxYWkiVjv_De6Ewbh_FTtxIYmMWHE0aGVmwmZnKCZwCo3nWEJZ0MUbrHbif6tRDTHOPTwIFhxxH4jxx6dwB32rzgf69Ese_o1etw0VVpCMILBsdnGg19J3SFDUcSdmJYGi8y9.yxjbxzD1kWe_twF0vdPWn9mWXqTLFoIwVIoMcCBlpB2t7bKg; _ga_W53XQNGQRL=GS2.1.s1779165100$o1$g1$t1779166042$j60$l0$h0") // 💡 模擬你已經登入或通過驗證的狀態
                 .timeout(5000)
                 .get().toString();
             Document subDoc = Jsoup.parse(subHtmlPage, url);
