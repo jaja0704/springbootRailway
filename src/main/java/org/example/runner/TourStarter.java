@@ -74,16 +74,15 @@ package org.example.runner;
 
 import org.example.KeelungSightsCrawler;
 import org.example.Sight;
+import org.example.repository.SightRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
-import org.example.repository.SightRepository;
 
 @Component
 public class TourStarter implements ApplicationRunner {
@@ -91,53 +90,34 @@ public class TourStarter implements ApplicationRunner {
     private static final Logger log = LoggerFactory.getLogger(TourStarter.class);
 
     @Autowired
-    private CrawlerService crawlerService;
-
-
-    @Autowired
     private SightRepository sightRepository;
-    // 💡 實作 ApplicationRunner 必須 Override 的 run 方法
-    // 時機：Spring Boot 初始化完成，準備開始接收 Request 之前觸發
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-   /*     // 如果你要結合原本註解掉的邏輯，現在可以直接這樣寫：
-        // if (args.containsOption("init-db")) {
-        //     log.info("偵測到 init-db 參數，執行特定初始化...");
-        // }
+        // 判斷啟動時是否有帶入 --init-db 參數
+            log.info("=== 偵測到 init-db 參數，系統啟動中：執行 tourStarter (同步模式) ===");
 
+            String[] districts = {"中山區", "信義區", "仁愛區", "中正區", "安樂區", "七堵區", "暖暖區"};
 
+            try {
+                log.info("正在清空舊有資料庫資料...");
+                sightRepository.deleteAll();
 
-        log.info("【主執行緒】網站啟動中！準備呼叫背景爬蟲...");
+                KeelungSightsCrawler crawler = new KeelungSightsCrawler();
 
-        // 💡 下達指令！因為對方有 @Async，所以這行程式碼會「瞬間執行完畢」，不會卡住
-        crawlerService.startBackgroundCrawling();
+                for (String district : districts) {
+                    log.info("正在爬取並寫入資料：{}", district);
+                    Sight[] sights = crawler.getItems(district);
+                    sightRepository.insert(Arrays.asList(sights));
+                }
 
-        log.info("【主執行緒】指令已下達，主執行緒收工，繼續去服務一般網頁使用者！");*/
+                log.info("=== tourStarter 執行完畢，資料庫初始化成功 ===");
 
-        String [] districts = {"中山區", "信義區", "仁愛區", "中正區", "安樂區", "七堵區", "暖暖區"};
-        System.out.println("=== 系統啟動中：執行 tourStarter ===");
-
-
-
-        try{
-            sightRepository.deleteAll();
-
-            if (args.containsOption("init-db")) {
-                System.out.println("偵測到 init-db 參數，正在初始化資料庫...");
+            } catch (RuntimeException e) {
+                log.error("TourStarter 執行期間發生錯誤（可能被目標網站封鎖或網路異常），但網站仍會保持正常運作。", e);
             }
 
-            KeelungSightsCrawler crawler = new KeelungSightsCrawler();
-
-            for (String district : districts) {
-                Sight[] sights = crawler.getItems(district);
-                sightRepository.insert(Arrays.asList(sights));
-            }
-
-            System.out.println("=== tourStarter 執行完畢 ===");
-        } catch (RuntimeException e) {
-            log.error("TourStarter 執行期間發生錯誤（可能被目標網站封鎖或網路異常），但網站仍會保持正常運作。", e);
-        }
 
     }
 }
