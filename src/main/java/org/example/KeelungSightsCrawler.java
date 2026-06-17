@@ -16,6 +16,7 @@ public class KeelungSightsCrawler {
 
     private static final Logger logger = LoggerFactory.getLogger(KeelungSightsCrawler.class);
 
+
     public Sight[] getItems(String string) {
 
         Sight[] ResultSights = null;
