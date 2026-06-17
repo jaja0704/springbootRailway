@@ -1,5 +1,4 @@
-/*
-package org.example.runner;
+/*package org.example.runner;
 
 import java.util.Arrays;
 
@@ -68,8 +67,7 @@ public class TourStarter {
         log.info("【主執行緒】指令已下達，主執行緒收工，繼續去服務一般網頁使用者！");
     }
 
-}
-*/
+}*/
 package org.example.runner;
 
 import org.example.KeelungSightsCrawler;

@@ -110,6 +110,7 @@ public class KeelungSightsCrawler {
                     continue;
                 }
             }
+            Thread.sleep(10000);
 
         } catch (IOException e) {
             System.err.println("讀取內頁失敗: " + url + " 原因: " + e.getMessage());
