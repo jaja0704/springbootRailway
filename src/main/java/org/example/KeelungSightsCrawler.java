@@ -45,9 +45,11 @@ public class KeelungSightsCrawler {
                     Elements links = targElement.select("li a");
 
                     for (Element link : links) {
-                        String tempUrl = link.attr("abs:href");
-                        System.out.println("網址: " + tempUrl);
-                        Sight temp =SubPage(tempUrl);
+                        String tempUrl = link.attr("href");
+                        System.out.println("原網址: " + tempUrl);
+                        String FixUrl = "https://jaja0704.github.io/www.travelking.com.tw/" + tempUrl;
+                        System.out.println("網址: " + FixUrl);
+                        Sight temp =SubPage(FixUrl);
                         temp.setZone(string);
                         tempSights.add(temp);
                     }
