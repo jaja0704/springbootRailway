@@ -1,3 +1,4 @@
+/*
 package org.example.runner;
 
 import java.util.Arrays;
@@ -67,4 +68,41 @@ public class TourStarter {
         log.info("【主執行緒】指令已下達，主執行緒收工，繼續去服務一般網頁使用者！");
     }
 
+}
+*/
+package org.example.runner;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.stereotype.Component;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@Component
+public class TourStarter implements ApplicationRunner {
+
+    private static final Logger log = LoggerFactory.getLogger(TourStarter.class);
+
+    @Autowired
+    private CrawlerService crawlerService;
+
+    // 💡 實作 ApplicationRunner 必須 Override 的 run 方法
+    // 時機：Spring Boot 初始化完成，準備開始接收 Request 之前觸發
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+
+        // 如果你要結合原本註解掉的邏輯，現在可以直接這樣寫：
+        // if (args.containsOption("init-db")) {
+        //     log.info("偵測到 init-db 參數，執行特定初始化...");
+        // }
+
+        log.info("【主執行緒】網站啟動中！準備呼叫背景爬蟲...");
+
+        // 💡 下達指令！因為對方有 @Async，所以這行程式碼會「瞬間執行完畢」，不會卡住
+        crawlerService.startBackgroundCrawling();
+
+        log.info("【主執行緒】指令已下達，主執行緒收工，繼續去服務一般網頁使用者！");
+    }
 }
